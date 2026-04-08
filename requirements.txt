@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+langchain
+python-multipart
+faiss-cpu
+pymupdf
+ollama
+pydantic
+langchain-community
+langchain-ollama
+
+python-dotenv
+httpx
+tqdm
