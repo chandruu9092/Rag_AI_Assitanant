@@ -19,32 +19,37 @@ Query Phase:   Question → Embed → Search FAISS (top 3) → LLM generates ans
 | Vector Store | FAISS (CPU) |
 | PDF Parsing | PyMuPDF (fitz) |
 | Orchestration | LangChain |
+| Containerization | Docker Compose |
 
 ## Project Structure
 
 ```
 ai-assistant/
-├── app/
-│   ├── main.py                   # FastAPI app entrypoint
-│   ├── config/
-│   │   └── settings.py           # Environment-based configuration
-│   ├── db/
-│   │   └── vector_store.py       # FAISS index creation and querying
-│   ├── routes/
-│   │   ├── upload.py             # POST /upload - PDF ingestion
-│   │   └── query.py              # GET /ask - Question answering
-│   ├── services/
-│   │   ├── embedding_service.py  # Ollama embedding generation
-│   │   ├── llm_service.py        # LLM prompt and response handling
-│   │   └── rag_service.py        # RAG pipeline orchestration
-│   └── utils/
-│       ├── pdf_loader.py         # PDF text extraction
-│       └── chunking.py           # Text chunking with overlap
-├── data/
-│   └── faiss_index/              # Persisted vector index
-├── requirements.txt
-├── .env.example
-└── .gitignore
+├── backend/
+│   ├── app/
+│   │   ├── main.py                   # FastAPI app entrypoint
+│   │   ├── config/
+│   │   │   └── settings.py           # Environment-based configuration
+│   │   ├── db/
+│   │   │   └── vector_store.py       # FAISS index creation and querying
+│   │   ├── routes/
+│   │   │   ├── upload.py             # POST /upload - PDF ingestion
+│   │   │   └── query.py              # GET /ask - Question answering
+│   │   ├── services/
+│   │   │   ├── embedding_service.py  # Ollama embedding generation
+│   │   │   ├── llm_service.py        # LLM prompt and response handling
+│   │   │   └── rag_service.py        # RAG pipeline orchestration
+│   │   └── utils/
+│   │       ├── pdf_loader.py         # PDF text extraction
+│   │       └── chunking.py           # Text chunking with overlap
+│   ├── data/
+│   │   └── faiss_index/              # Persisted vector index
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── .gitignore
+├── frontend/                         # Frontend (coming soon)
+├── docker-compose.yml
+└── README.md
 ```
 
 ## Prerequisites
@@ -63,6 +68,7 @@ ai-assistant/
 
 2. **Create and activate a virtual environment**
    ```bash
+   cd backend
    python -m venv venv
    source venv/bin/activate
    ```
@@ -95,6 +101,7 @@ ollama serve
 
 Start the FastAPI application:
 ```bash
+cd backend
 uvicorn app.main:app --reload
 ```
 
@@ -131,7 +138,7 @@ curl "http://localhost:8000/ask?question=What%20is%20this%20document%20about"
 |----------|---------|-------------|
 | `LLM_MODEL` | `llama3` | Ollama model name for embeddings and generation |
 
-Chunking defaults (in `app/utils/chunking.py`):
+Chunking defaults (in `backend/app/utils/chunking.py`):
 - **Chunk size:** 500 characters
 - **Overlap:** 100 characters
 
