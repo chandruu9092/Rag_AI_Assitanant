@@ -1,0 +1,33 @@
+# =========================================
+# Stage: Development (Vite React.js App)
+# =========================================
+ARG NODE_VERSION=24-alpine
+ARG USER=www-data
+ 
+FROM node:${NODE_VERSION} AS dev
+ 
+# Set working directory inside the container
+WORKDIR /app
+ 
+# Copy package files
+COPY ./rag_react_app/package*.json ./
+ 
+# Install dependencies
+RUN npm ci
+ 
+# Copy rest of the source code
+COPY ./rag_react_app .
+ 
+ 
+# Ensure the "node" user owns the application files
+RUN chown -R ${USER}:${USER} /app
+ 
+ 
+# Switch to the built-in non-root "node" user
+USER ${USER}
+ 
+# Expose Vite dev server port
+EXPOSE 3000
+ 
+# Run Vite in dev mode, accessible outside the container
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
